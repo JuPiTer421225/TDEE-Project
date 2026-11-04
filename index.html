@@ -4,6 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>บันทึกแคลอรี่ประจำวัน – TDEE Tracker</title>
+<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#111111">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TDEE">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -69,7 +77,7 @@ li.item:first-child{border-top:0}
 .libr{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}
 .libr:first-child{border-top:0}
 .star{background:none;border:0;font-size:1.25rem;cursor:pointer;color:var(--mute);padding:0 4px}
-.star.on{color:var(--c)}
+.star.on{color:var(--accent)}
 .btn.sm{padding:4px 10px;font-size:.85rem}
 .tabs{display:flex;gap:6px;margin-bottom:8px}
 .chip.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
@@ -97,21 +105,25 @@ body.menu-open #planSide{transform:none;visibility:visible;transition:transform 
 #scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:20;display:none}
 body.menu-open #scrim{display:block}
 @media (prefers-reduced-motion:reduce){#planSide,#addSheet{transition:none!important}}
-:root{--bg:#F5F3FF;--surface:#fff;--ink:#1B1840;--mute:#6B6890;--line:#E6E2F8;--accent:#6D5BF0;--accent-ink:#fff;--track:#ECE8FC}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F0D24;--surface:#1A1738;--ink:#EDEBFF;--mute:#9D99C4;--line:#2C2858;--accent:#9486FF;--accent-ink:#120F33;--track:#2A2655}}
-:root[data-theme="dark"]{--bg:#0F0D24;--surface:#1A1738;--ink:#EDEBFF;--mute:#9D99C4;--line:#2C2858;--accent:#9486FF;--accent-ink:#120F33;--track:#2A2655}
+:root{--bg:#F4F2EE;--surface:#fff;--ink:#111;--mute:#6E6A62;--line:#E7E3DA;--accent:#F59A0C;--accent-ink:#111;--track:#EDE9DF;--p:#F59A0C;--c:#FFD27A;--f:#6F6A5F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121212;--surface:#1E1E1E;--ink:#F5F3EE;--mute:#A29E94;--line:#2F2F2F;--accent:#FFB230;--accent-ink:#111;--track:#2C2C2C;--p:#FFB230;--c:#FFD27A;--f:#8F8A7E}}
+:root[data-theme="dark"]{--bg:#121212;--surface:#1E1E1E;--ink:#F5F3EE;--mute:#A29E94;--line:#2F2F2F;--accent:#FFB230;--accent-ink:#111;--track:#2C2C2C;--p:#FFB230;--c:#FFD27A;--f:#8F8A7E}
 main{max-width:600px;padding-bottom:104px}
-.grid{grid-template-columns:1fr!important}
+.grid{grid-template-columns:minmax(0,1fr)!important}
+.grid>*{min-width:0}
+#list li.item>div{min-width:0;overflow-wrap:anywhere}
+.chart .col{min-width:0}
+@media (max-width:380px){.chart{gap:4px}.chart .col{font-size:.65rem}}
 main>div:not([class]){display:contents}
-.panel{border:0;border-radius:20px;box-shadow:0 2px 14px rgba(80,60,200,.08)}
+.panel{border:0;border-radius:20px;box-shadow:0 2px 14px rgba(0,0,0,.07)}
 .panel.plain{background:transparent;box-shadow:none;padding:0}
 .plain .empty{background:var(--surface);border-radius:16px;padding:16px}
 #macros{background:var(--surface);border-radius:16px;padding:14px}
 input,select{border-radius:12px}
-.btn{background:linear-gradient(135deg,#8E80FF,#6A4BE6);color:#fff;border-radius:12px}
+.btn{background:linear-gradient(135deg,#FFBE55,#F59A0C);color:#111;font-weight:700;border-radius:12px}
 .datebar input{border-radius:999px;background:var(--surface);border:0}
 .datebar .btn{width:38px;height:38px;padding:0;border-radius:50%;background:var(--surface);border:0}
-.hero{background:linear-gradient(135deg,#1E1A4D,#33287A);color:#fff;border-radius:22px;padding:22px}
+.hero{background:linear-gradient(135deg,#111,#2B2B2B);color:#fff;border-radius:22px;padding:22px}
 .herotop{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .hl{color:rgba(255,255,255,.7);font-size:.85rem}
 .hero .big b{font-size:2.4rem;color:#fff}
@@ -119,13 +131,13 @@ input,select{border-radius:12px}
 .hero .stats div{background:rgba(255,255,255,.1)}
 .hero .stats small{color:rgba(255,255,255,.7)}
 .ringwrap{position:relative;width:92px;height:92px;flex:none}
-.ring{position:absolute;inset:0;border-radius:50%;--pct:0;background:conic-gradient(#B7AEFF calc(var(--pct)*1%),rgba(255,255,255,.14) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 10px),#000 calc(100% - 9px));mask:radial-gradient(farthest-side,transparent calc(100% - 10px),#000 calc(100% - 9px))}
+.ring{position:absolute;inset:0;border-radius:50%;--pct:0;background:conic-gradient(#FFB230 calc(var(--pct)*1%),rgba(255,255,255,.14) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 10px),#000 calc(100% - 9px));mask:radial-gradient(farthest-side,transparent calc(100% - 10px),#000 calc(100% - 9px))}
 .ring.over{background:conic-gradient(#FF8A9B calc(var(--pct)*1%),rgba(255,255,255,.14) 0)}
 #ringTxt{position:absolute;inset:0;display:grid;place-items:center;font-weight:700}
-#list li.item{grid-template-columns:auto 1fr auto auto;background:var(--surface);border:0;border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 2px 10px rgba(80,60,200,.08)}
+#list li.item{grid-template-columns:auto 1fr auto;background:var(--surface);border:0;border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
 .ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem}
 .act .del{width:34px;height:34px;border-radius:50%;background:var(--bg);display:grid;place-items:center;padding:0;font-size:1rem}
-.fab{position:fixed;right:max(16px,calc(50% - 284px));bottom:calc(20px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;color:#fff;font-size:2rem;line-height:1;padding:0;background:linear-gradient(135deg,#9A8CFF,#6A4BE6);box-shadow:0 8px 20px rgba(106,75,230,.45);cursor:pointer;z-index:10}
+.fab{position:fixed;right:max(16px,calc(50% - 284px));bottom:calc(20px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;color:#111;font-size:2rem;line-height:1;padding:0;background:linear-gradient(135deg,#FFBE55,#F59A0C);box-shadow:0 8px 20px rgba(245,154,12,.45);cursor:pointer;z-index:10}
 body.menu-open .fab,body.sheet-open .fab{display:none}
 #addSheet{position:fixed;left:50%;bottom:0;width:min(600px,100%);max-height:88vh;overflow:auto;z-index:30;border-radius:22px 22px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.25);transform:translate(-50%,105%);visibility:hidden;transition:transform .25s,visibility 0s .25s}
 body.sheet-open #addSheet{transform:translate(-50%,0);visibility:visible;transition:transform .25s}
@@ -135,9 +147,17 @@ body.sheet-open #scrim{display:block}
 .mname .mi{width:24px;height:24px}
 .mrow{grid-template-columns:100px 1fr 100px}
 .hero .stats .mi{display:block;margin:0 auto 2px;width:34px;height:34px}
-#toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#1E1A4D;color:#fff;padding:10px 18px;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:40;white-space:nowrap}
+#toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#111;color:#fff;padding:10px 18px;border-radius:999px;font-size:.9rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:40;white-space:nowrap}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){#toast{transition:none}}
+main{grid-template-columns:minmax(0,1fr)}
+.top{row-gap:8px}
+.top h1{min-width:0;font-size:1.3rem}
+#list li.item .act{grid-column:1/-1;justify-content:flex-end;border-top:1px solid var(--line);padding-top:8px}
+#sPp,#sFp,#sCp{white-space:pre-line}
+.hero .stats>div{min-width:0}
+.hero .stats strong{white-space:nowrap}
+@media (max-width:380px){.hero{padding:18px 16px}.hero .big b{font-size:2rem}.hero .stats .mi{width:28px;height:28px}.hero .stats strong{font-size:.95rem}}
 @media (prefers-reduced-motion:reduce){.bar>i{transition:none}}
 </style>
 </head>
@@ -211,7 +231,7 @@ body.sheet-open #scrim{display:block}
     <p class="note">แผนจะใช้กับวันที่เริ่มต้นและทุกวันหลังจากนั้นจนกว่าจะถึงแผนถัดไป วันที่อยู่ก่อนแผนแรกใช้เป้าหมายจากข้อมูลของคุณ ตั้งวันเริ่มซ้ำจะเป็นการแทนที่แผนเดิม ขั้นต่ำ 800 kcal</p>
     <h3 class="sub">เป้าหมายโปรตีน ไขมัน คาร์บ ของแผนนี้ (ไม่บังคับ)</h3>
     <div class="row">
-      <div><label for="mMode">กำหนดเป็น</label><select id="mMode"><option value="pct">เปอร์เซ็นต์ของแคลอรี่</option><option value="g">กรัมต่อวัน</option></select></div>
+      <div><label for="mMode">กำหนดเป็น</label><select id="mMode"><option value="pct">เปอร์เซ็นต์ (%)</option><option value="g">กรัมต่อวัน</option></select></div>
       <div><label for="mP" id="lP">โปรตีน</label><input id="mP" type="number" min="0" step="any" inputmode="decimal"></div>
       <div><label for="mF" id="lF">ไขมัน</label><input id="mF" type="number" min="0" step="any" inputmode="decimal"></div>
       <div><label for="mC" id="lC">คาร์บ</label><input id="mC" type="number" min="0" step="any" inputmode="decimal"></div>
@@ -476,7 +496,7 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
     var pf=state.profile;$("profSum").textContent=pf.age&&pf.w&&pf.h?pf.age+" ปี · "+pf.w+" kg · "+pf.h+" cm":"กรอกข้อมูลเพื่อคำนวณ TDEE";
     var base=calc(),c=base?Object.assign({},base):null,eaten=dayTotal(cur);
     var tf=c?targetFor(cur,base):null;if(c)c.target=tf.kcal;
-    $("phaseNote").textContent=!c?"":tf.plan?(tf.plan.label?tf.plan.label+" · ":"")+"ใช้แผนที่เริ่มตั้งแต่ "+fmtDate(tf.plan.from)+" ("+signed(tf.kcal-c.tdee)+" kcal จาก TDEE)":"ใช้เป้าหมายจากข้อมูลของคุณ ("+signed(tf.kcal-c.tdee)+" kcal จาก TDEE)";
+    $("phaseNote").textContent=!c?"":tf.plan?(tf.plan.label?tf.plan.label+" · ":"")+"เริ่ม "+fmtDate(tf.plan.from)+" ("+signed(tf.kcal-c.tdee)+" kcal จาก TDEE)":"ใช้เป้าหมายจากข้อมูลของคุณ ("+signed(tf.kcal-c.tdee)+" kcal จาก TDEE)";
     $("sEaten").textContent=fmt(eaten);
     var bar=$("mainBar");
     if(c){
@@ -510,7 +530,7 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
       if(it.name&&it.qty>0){var fv=findFood(it.name,it.unit);act.appendChild(mkBtn("star"+(fv&&fv.fav?" on":""),fv&&fv.fav?"★":"☆","รายการโปรด",function(){upsert(it,false);var f=findFood(it.name,it.unit);f.fav=!f.fav;save();render()}))}
       act.appendChild(mkBtn("del","✎","แก้ไข "+(it.name||"รายการ"),function(){loadEntry(it,idx)}));
       act.appendChild(d);
-      var ic=document.createElement("span");ic.className="ico";ic.textContent={"เช้า":"🌅","กลางวัน":"☀️","เย็น":"🌙","ของว่าง":"🍎"}[it.meal]||"🍽️";ic.style.background={"เช้า":"#FFF1D6","กลางวัน":"#E4F4FF","เย็น":"#EDE7FF","ของว่าง":"#FFE5EA"}[it.meal]||"#EEE";
+      var ic=document.createElement("span");ic.className="ico";ic.textContent={"เช้า":"🌅","กลางวัน":"☀️","เย็น":"🌙","ของว่าง":"🍎"}[it.meal]||"🍽️";ic.style.background={"เช้า":"#FFF1D6","กลางวัน":"#FFE0A8","เย็น":"#EAE6DD","ของว่าง":"#FFD9C2"}[it.meal]||"#EEE";
       li.appendChild(ic);li.appendChild(l);li.appendChild(k);li.appendChild(act);list.appendChild(li);
     });
     // macros
@@ -520,8 +540,8 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
     var mt=macroTargets(c?c.target:0,tf&&tf.plan?tf.plan.m:null);
     [["p","sP","sPp",4],["f","sF","sFp",9],["c","sC","sCp",4]].forEach(function(a){
       var g=tot[a[0]];
-      $(a[1]).textContent=r1(g)+(mt?" / "+Math.round(mt.g[a[0]]):"")+" g";
-      $(a[2]).textContent=(sum?Math.round(g*a[3]/sum*100):0)+"% ของสัดส่วน"+(mt?" (เป้า "+Math.round(mt.pct[a[0]])+"%)":"");
+      $(a[1]).textContent=r1(g)+(mt?"/"+Math.round(mt.g[a[0]]):"")+" g";
+      $(a[2]).textContent=(sum?Math.round(g*a[3]/sum*100):0)+"%"+(mt?"\nเป้า "+Math.round(mt.pct[a[0]])+"%":"");
     });
     [["โปรตีน",tot.p,"var(--p)",4,"ic-p"],["คาร์บ",tot.c,"var(--c)",4,"ic-c"],["ไขมัน",tot.f,"var(--f)",9,"ic-f"]].forEach(function(r){
       var row=document.createElement("div");row.className="mrow";
