@@ -112,6 +112,13 @@ main{max-width:600px;padding-bottom:104px}
 .grid{grid-template-columns:minmax(0,1fr)!important}
 .grid>*{min-width:0}
 #list li.item>div{min-width:0;overflow-wrap:anywhere}
+.ico::after{content:"📷";position:absolute;right:-5px;bottom:-5px;width:19px;height:19px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:.65rem;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.ico.hasph::after{display:none}
+#photoView{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.75);display:grid;place-items:center;padding:16px}
+.pv{background:var(--surface);border-radius:20px;padding:14px;width:min(520px,100%);max-height:100%;overflow:auto}
+.pv img{width:100%;border-radius:14px;display:block}
+.photorow{display:flex;align-items:center;gap:10px}
+#fPrev{width:44px;height:44px;border-radius:12px;object-fit:cover}
 .chart .col{min-width:0}
 @media (max-width:380px){.chart{gap:4px}.chart .col{font-size:.65rem}}
 main>div:not([class]){display:contents}
@@ -135,7 +142,7 @@ input,select{border-radius:12px}
 .ring.over{background:conic-gradient(#FF8A9B calc(var(--pct)*1%),rgba(255,255,255,.14) 0)}
 #ringTxt{position:absolute;inset:0;display:grid;place-items:center;font-weight:700}
 #list li.item{grid-template-columns:auto 1fr auto;background:var(--surface);border:0;border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
-.ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem}
+.ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;position:relative;border:0;padding:0;cursor:pointer;background-size:cover;background-position:center}
 .act .del{width:34px;height:34px;border-radius:50%;background:var(--bg);display:grid;place-items:center;padding:0;font-size:1rem}
 .fab{position:fixed;right:max(16px,calc(50% - 284px));bottom:calc(20px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;color:#111;font-size:2rem;line-height:1;padding:0;background:linear-gradient(135deg,#FFBE55,#F59A0C);box-shadow:0 8px 20px rgba(245,154,12,.45);cursor:pointer;z-index:10}
 body.menu-open .fab,body.sheet-open .fab{display:none}
@@ -163,6 +170,8 @@ main{grid-template-columns:minmax(0,1fr)}
 </head>
 <body>
 <div id="scrim"></div>
+<input type="file" id="photoIn" accept="image/*" hidden>
+<div id="photoView" hidden><div class="pv"><img id="pvImg" alt="รูปอาหาร"><p class="note" id="pvCap"></p><div class="act"><button type="button" class="btn sm" id="pvChange">เปลี่ยนรูป</button><button type="button" class="btn ghost sm" id="pvDel">ลบรูป</button><button type="button" class="btn ghost sm" id="pvClose">ปิด</button></div></div></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
 <defs><path id="slice" d="M8 26C6 14 16 10 24 12C32 10 42 14 40 26L38 50C38 53 36 55 33 55L15 55C12 55 10 53 10 50Z"/></defs>
 <symbol id="ic-p" viewBox="0 0 64 64">
@@ -257,6 +266,7 @@ main{grid-template-columns:minmax(0,1fr)}
       <form id="foodForm" onsubmit="return false">
         <div class="row">
           <div style="grid-column:1/-1"><label for="fName">ชื่ออาหาร</label><input id="fName" placeholder="เช่น ข้าวมันไก่" autocomplete="off"></div>
+          <div style="grid-column:1/-1" class="photorow"><button type="button" class="btn ghost sm" id="fPhoto">📷 แนบรูป</button><img id="fPrev" alt="รูปที่แนบ" hidden><button type="button" class="del" id="fPhotoX" aria-label="ลบรูปที่แนบ" hidden>×</button></div>
           <div><label for="fMeal">มื้อ</label>
             <select id="fMeal"><option>เช้า</option><option>กลางวัน</option><option>เย็น</option><option>ของว่าง</option></select></div>
           <div><label for="fQty">จำนวนที่กิน</label><input id="fQty" type="number" min="0" step="any" value="1" inputmode="decimal"></div>
@@ -397,6 +407,17 @@ main{grid-template-columns:minmax(0,1fr)}
     s.value=keep;if(s.value!==keep)s.value="จาน";
   }
   function setUnit(u){u=(u||"").trim();if(u&&u!=="__new"&&BASE.indexOf(u)<0&&state.units.indexOf(u)<0){state.units.push(u);save()}buildUnits(u||"จาน");$("unitNew").hidden=true}
+  var pending=null,ptarget="list",curIt=null;
+  function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+  var DB=null;
+  function idb(){return DB||(DB=new Promise(function(res,rej){var q=indexedDB.open("tdee-photos",1);q.onupgradeneeded=function(){q.result.createObjectStore("p")};q.onsuccess=function(){res(q.result)};q.onerror=function(){rej(q.error)}}))}
+  function pget(id){return idb().then(function(db){return new Promise(function(res){var r=db.transaction("p").objectStore("p").get(id);r.onsuccess=function(){res(r.result||null)};r.onerror=function(){res(null)}})}).catch(function(){return null})}
+  function pput(id,v){return idb().then(function(db){return new Promise(function(res,rej){var t=db.transaction("p","readwrite");t.objectStore("p").put(v,id);t.oncomplete=res;t.onerror=function(){rej(t.error)}})})}
+  function pdel(id){return idb().then(function(db){return new Promise(function(res){var t=db.transaction("p","readwrite");t.objectStore("p").delete(id);t.oncomplete=res;t.onerror=res})}).catch(function(){})}
+  function shrink(file){return new Promise(function(res,rej){var img=new Image(),u=URL.createObjectURL(file);img.onload=function(){var m=640,k=Math.min(1,m/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",.72))};img.onerror=function(){rej(new Error("อ่านรูปไม่ได้"))};img.src=u})}
+  function pick(){$("photoIn").value="";$("photoIn").click()}
+  function photoClick(it){ptarget="list";curIt=it;if(it.id)pget(it.id).then(function(u){if(u){$("pvImg").src=u;$("pvCap").textContent=(it.name||"")+" · รูปเก็บในเครื่องนี้เท่านั้น";$("photoView").hidden=false}else pick()});else pick()}
+  function showPrev(){var im=$("fPrev");im.hidden=!pending;if(pending)im.src=pending;$("fPhotoX").hidden=!pending;$("fPhoto").textContent=pending?"📷 เปลี่ยนรูป":"📷 แนบรูป"}
   function r1(x){return Math.round(x*10)/10}
   function fkey(n,u){return n.trim().toLowerCase()+"|"+u.trim()}
   function findFood(n,u){var k=fkey(n,u);return state.foods.filter(function(f){return fkey(f.name,f.unit)===k})[0]}
@@ -408,7 +429,7 @@ main{grid-template-columns:minmax(0,1fr)}
   }
   function calcFields(){var q=parseFloat($("fQty").value)||0;if(tpl){$("fKcal").value=r1(tpl.k*q);$("fP").value=r1(tpl.p*q);$("fC").value=r1(tpl.c*q);$("fF").value=r1(tpl.a*q)}}
   function fillForm(n,u,q,per){tpl=per;$("fName").value=n;setUnit(u);$("fQty").value=q;calcFields()}
-  function resetForm(){["fName","fKcal","fP","fC","fF"].forEach(function(i){$(i).value=""});$("fQty").value=1;tpl=null;editIdx=-1;$("addBtn").textContent="เพิ่มรายการ";$("cancelBtn").hidden=true;sheet(false)}
+  function resetForm(){["fName","fKcal","fP","fC","fF"].forEach(function(i){$(i).value=""});$("fQty").value=1;tpl=null;editIdx=-1;$("addBtn").textContent="เพิ่มรายการ";$("cancelBtn").hidden=true;pending=null;showPrev();sheet(false)}
   function loadEntry(it,idx){
     var q=it.qty>0?it.qty:0;
     $("fName").value=it.name||"";setUnit(it.unit||"");$("fQty").value=q||1;$("fMeal").value=it.meal;
@@ -525,12 +546,13 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
       l.appendChild(n);l.appendChild(m);
       var k=document.createElement("strong");k.textContent=fmt(it.kcal)+" kcal";
       var d=document.createElement("button");d.className="del";d.type="button";d.textContent="×";d.setAttribute("aria-label","ลบ "+(it.name||"รายการ"));
-      d.onclick=function(){state.logs[cur].splice(idx,1);if(!state.logs[cur].length)delete state.logs[cur];save();render()};
+      d.onclick=function(){if(it.id)pdel(it.id);state.logs[cur].splice(idx,1);if(!state.logs[cur].length)delete state.logs[cur];save();render()};
       var act=document.createElement("div");act.className="act";
       if(it.name&&it.qty>0){var fv=findFood(it.name,it.unit);act.appendChild(mkBtn("star"+(fv&&fv.fav?" on":""),fv&&fv.fav?"★":"☆","รายการโปรด",function(){upsert(it,false);var f=findFood(it.name,it.unit);f.fav=!f.fav;save();render()}))}
       act.appendChild(mkBtn("del","✎","แก้ไข "+(it.name||"รายการ"),function(){loadEntry(it,idx)}));
       act.appendChild(d);
-      var ic=document.createElement("span");ic.className="ico";ic.textContent={"เช้า":"🌅","กลางวัน":"☀️","เย็น":"🌙","ของว่าง":"🍎"}[it.meal]||"🍽️";ic.style.background={"เช้า":"#FFF1D6","กลางวัน":"#FFE0A8","เย็น":"#EAE6DD","ของว่าง":"#FFD9C2"}[it.meal]||"#EEE";
+      var ic=document.createElement("button");ic.type="button";ic.className="ico";ic.setAttribute("aria-label","แนบรูปอาหาร");ic.textContent={"เช้า":"🌅","กลางวัน":"☀️","เย็น":"🌙","ของว่าง":"🍎"}[it.meal]||"🍽️";ic.style.background={"เช้า":"#FFF1D6","กลางวัน":"#FFE0A8","เย็น":"#EAE6DD","ของว่าง":"#FFD9C2"}[it.meal]||"#EEE";
+      ic.onclick=function(){photoClick(it)};if(it.id)pget(it.id).then(function(u){if(u){ic.style.backgroundImage="url("+u+")";ic.textContent="";ic.classList.add("hasph")}});
       li.appendChild(ic);li.appendChild(l);li.appendChild(k);li.appendChild(act);list.appendChild(li);
     });
     // macros
@@ -582,8 +604,9 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
     if($("fUnit").value==="__new"){$("unitNewIn").focus();return}
     var q=parseFloat($("fQty").value)||0,it={name:$("fName").value.trim(),qty:q,unit:$("fUnit").value.trim(),meal:$("fMeal").value,kcal:kcal,p:parseFloat($("fP").value)||0,c:parseFloat($("fC").value)||0,f:parseFloat($("fF").value)||0};
     var ed=editIdx>=0&&editDate===cur&&state.logs[cur]&&state.logs[cur][editIdx];
+    it.id=(ed&&ed.id)||uid();
     if(ed){state.logs[cur][editIdx]=it}else{(state.logs[cur]=state.logs[cur]||[]).push(it)}
-    upsert(it,!ed);resetForm();save();
+    var pend=pending;upsert(it,!ed);resetForm();save();if(pend)pput(it.id,pend).then(render);
     $("fName").focus();render();
   };
   $("fUnit").addEventListener("change",function(){var n=this.value==="__new";$("unitNew").hidden=!n;if(n)$("unitNewIn").focus()});
@@ -609,6 +632,21 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
       toast($("syncSum").textContent==="ซิงก์แล้ว"?"บันทึกและซิงก์แล้ว":"บันทึกในเครื่องแล้ว แต่ซิงก์ไม่สำเร็จ");
     });
   };
+  $("photoIn").onchange=function(){
+    var f=this.files&&this.files[0];if(!f)return;
+    shrink(f).then(function(u){
+      if(ptarget==="form"){pending=u;showPrev();return}
+      if(!curIt)return;
+      if(!curIt.id){curIt.id=uid();save()}
+      return pput(curIt.id,u).then(function(){render();toast("บันทึกรูปแล้ว")});
+    }).catch(function(e){toast(e&&e.message?e.message:"บันทึกรูปไม่สำเร็จ")});
+  };
+  $("pvClose").onclick=function(){$("photoView").hidden=true};
+  $("photoView").addEventListener("click",function(e){if(e.target===this)this.hidden=true});
+  $("pvChange").onclick=function(){$("photoView").hidden=true;ptarget="list";pick()};
+  $("pvDel").onclick=function(){if(curIt&&curIt.id)pdel(curIt.id).then(function(){$("photoView").hidden=true;render()})};
+  $("fPhoto").onclick=function(){ptarget="form";pick()};
+  $("fPhotoX").onclick=function(){pending=null;showPrev()};
   $("fab").onclick=function(){sheet(true)};
   $("sheetClose").onclick=function(){sheet(false)};
   $("cancelBtn").onclick=resetForm;
