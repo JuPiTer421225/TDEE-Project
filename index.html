@@ -104,7 +104,7 @@ summary small{display:block}
 body.menu-open #planSide{transform:none;visibility:visible;transition:transform .25s}
 #scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:20;display:none}
 body.menu-open #scrim{display:block}
-@media (prefers-reduced-motion:reduce){#planSide,#addSheet,#calcSheet{transition:none!important}}
+@media (prefers-reduced-motion:reduce){#planSide,#addSheet,#calcSheet,#detailSheet{transition:none!important}}
 :root{--bg:#F4F2EE;--surface:#fff;--ink:#111;--mute:#6E6A62;--line:#E7E3DA;--accent:#F59A0C;--accent-ink:#111;--track:#EDE9DF;--p:#F59A0C;--c:#FFD27A;--f:#6F6A5F}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121212;--surface:#1E1E1E;--ink:#F5F3EE;--mute:#A29E94;--line:#2F2F2F;--accent:#FFB230;--accent-ink:#111;--track:#2C2C2C;--p:#FFB230;--c:#FFD27A;--f:#8F8A7E}}
 :root[data-theme="dark"]{--bg:#121212;--surface:#1E1E1E;--ink:#F5F3EE;--mute:#A29E94;--line:#2F2F2F;--accent:#FFB230;--accent-ink:#111;--track:#2C2C2C;--p:#FFB230;--c:#FFD27A;--f:#8F8A7E}
@@ -121,6 +121,19 @@ main{max-width:600px;padding-bottom:104px}
 .chead{font-weight:700;font-size:1.15rem;margin:14px 0 6px}
 .crow{display:grid;grid-template-columns:64px 1fr auto;gap:6px;padding:7px 0;border-top:1px solid var(--line);font-size:.88rem;align-items:center}
 .crow .over{color:var(--over)}
+.dcard{background:var(--bg);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.dcard small{color:var(--mute);display:flex;align-items:center;gap:6px}
+.dcard strong{font-size:1.1rem}
+.dcard .mi{width:26px;height:26px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:8px}
+#dSum{margin-bottom:16px}
+#dList li{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--bg);border-radius:16px;padding:12px 14px;margin-bottom:8px}
+#dList li.empty{display:block;color:var(--mute)}
+#dList .gn{font-weight:700;overflow-wrap:anywhere}
+.addrow{background:none;border:0;color:var(--ink);font-weight:700;padding:10px 4px;cursor:pointer;display:block}
+#dEdit{background:var(--bg);border-radius:16px;padding:14px;margin:8px 0}
+#dEdit input,#dEdit select{background:var(--surface)}
+.tap{cursor:pointer}
 .ico::after{content:"📷";position:absolute;right:-5px;bottom:-5px;width:19px;height:19px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:.65rem;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .ico.hasph::after{display:none}
 #photoView{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.75);display:grid;place-items:center;padding:16px}
@@ -154,10 +167,10 @@ input,select{border-radius:12px}
 .ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;position:relative;border:0;padding:0;cursor:pointer;background-size:cover;background-position:center}
 .act .del{width:34px;height:34px;border-radius:50%;background:var(--bg);display:grid;place-items:center;padding:0;font-size:1rem}
 .fab{position:fixed;right:max(16px,calc(50% - 284px));bottom:calc(20px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;color:#111;font-size:2rem;line-height:1;padding:0;background:linear-gradient(135deg,#FFBE55,#F59A0C);box-shadow:0 8px 20px rgba(245,154,12,.45);cursor:pointer;z-index:10}
-body.menu-open .fab,body.sheet-open .fab,body.calc-open .fab,body.menu-open .fabmenu,body.sheet-open .fabmenu,body.calc-open .fabmenu{display:none}
-#addSheet,#calcSheet{position:fixed;left:50%;bottom:0;width:min(600px,100%);max-height:88vh;overflow:auto;z-index:30;border-radius:22px 22px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.25);transform:translate(-50%,105%);visibility:hidden;transition:transform .25s,visibility 0s .25s}
-body.sheet-open #addSheet,body.calc-open #calcSheet{transform:translate(-50%,0);visibility:visible;transition:transform .25s}
-body.sheet-open #scrim,body.calc-open #scrim{display:block}
+body.menu-open .fab,body.sheet-open .fab,body.calc-open .fab,body.detail-open .fab,body.menu-open .fabmenu,body.sheet-open .fabmenu,body.calc-open .fabmenu,body.detail-open .fabmenu{display:none}
+#addSheet,#calcSheet,#detailSheet{position:fixed;left:50%;bottom:0;width:min(600px,100%);max-height:88vh;overflow:auto;z-index:30;border-radius:22px 22px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.25);transform:translate(-50%,105%);visibility:hidden;transition:transform .25s,visibility 0s .25s}
+body.sheet-open #addSheet,body.calc-open #calcSheet,body.detail-open #detailSheet{transform:translate(-50%,0);visibility:visible;transition:transform .25s}
+body.sheet-open #scrim,body.calc-open #scrim,body.detail-open #scrim{display:block}
 .mi{width:26px;height:26px;flex:none;vertical-align:middle}
 .mname{display:flex;align-items:center;gap:6px}
 .mname .mi{width:24px;height:24px}
@@ -207,6 +220,28 @@ main{grid-template-columns:minmax(0,1fr)}
   <div class="g4"><input id="cTk" type="number" step="any" aria-label="เป้า kcal"><input id="cTp" type="number" step="any" aria-label="เป้า โปรตีน"><input id="cTc" type="number" step="any" aria-label="เป้า คาร์บ"><input id="cTf" type="number" step="any" aria-label="เป้า ไขมัน"></div>
   <div id="cOut"></div>
   <p class="act" style="margin:12px 0 0"><select id="cMeal" style="width:auto" aria-label="มื้อ"><option>เช้า</option><option>กลางวัน</option><option>เย็น</option><option>ของว่าง</option></select><button type="button" class="btn" id="cAdd">เพิ่มลงบันทึกวันนี้</button></p>
+</section>
+<section class="panel" id="detailSheet" aria-label="รายละเอียดอาหาร">
+  <div class="drawer-head"><div><h2 style="margin:0" id="dTitle">รายละเอียด</h2><small class="note" id="dSub"></small></div><button type="button" class="menubtn" id="dClose" aria-label="ปิด">✕</button></div>
+  <div id="dSum"></div>
+  <h3 class="sub" style="margin:0 0 8px">ส่วนประกอบ</h3>
+  <ul id="dList"></ul>
+  <div id="dEdit" hidden>
+    <div class="row">
+      <div style="grid-column:1/-1"><label for="gFood">เลือกจากเมนูลัด / ประวัติ</label><select id="gFood"></select></div>
+      <div style="grid-column:1/-1"><label for="gName">ชื่อส่วนประกอบ</label><input id="gName" placeholder="เช่น ข้าวสวย" autocomplete="off"></div>
+      <div><label for="gQty">จำนวน</label><input id="gQty" type="number" min="0" step="any" inputmode="decimal" value="100"></div>
+      <div><label for="gUnit">หน่วย</label><select id="gUnit"></select></div>
+      <div><label for="gK">แคลอรี่ (kcal)</label><input id="gK" type="number" min="0" step="any" inputmode="decimal"></div>
+      <div><label for="gP">โปรตีน (g)</label><input id="gP" type="number" min="0" step="any" inputmode="decimal"></div>
+      <div><label for="gC">คาร์บ (g)</label><input id="gC" type="number" min="0" step="any" inputmode="decimal"></div>
+      <div><label for="gF">ไขมัน (g)</label><input id="gF" type="number" min="0" step="any" inputmode="decimal"></div>
+    </div>
+    <p class="act" style="margin:12px 0 0"><button type="button" class="btn sm" id="gSave">บันทึกส่วนประกอบ</button><button type="button" class="btn ghost sm" id="gCancel">ยกเลิก</button><button type="button" class="btn ghost sm" id="gDel" hidden>ลบ</button></p>
+  </div>
+  <button type="button" class="addrow" id="dAdd">+ เพิ่มส่วนประกอบ</button>
+  <p class="note" id="dNote"></p>
+  <button type="button" class="btn" id="dSave" style="width:100%;margin-top:12px;padding:14px">บันทึก</button>
 </section>
 <input type="file" id="photoIn" accept="image/*" hidden>
 <div id="photoView" hidden><div class="pv"><img id="pvImg" alt="รูปอาหาร"><p class="note" id="pvCap"></p><div class="act"><button type="button" class="btn sm" id="pvChange">เปลี่ยนรูป</button><button type="button" class="btn ghost sm" id="pvDel">ลบรูป</button><button type="button" class="btn ghost sm" id="pvClose">ปิด</button></div></div></div>
@@ -316,7 +351,7 @@ main{grid-template-columns:minmax(0,1fr)}
           <div><label for="fC">คาร์บ (g)</label><input id="fC" type="number" min="0" inputmode="decimal"></div>
           <div><label for="fF">ไขมัน (g)</label><input id="fF" type="number" min="0" inputmode="decimal"></div>
         </div>
-        <p style="margin:12px 0 0"><button class="btn" id="addBtn">เพิ่มรายการ</button> <button class="btn ghost" type="button" id="cancelBtn" hidden>ยกเลิกการแก้ไข</button></p>
+        <p style="margin:12px 0 0"><button class="btn" id="addBtn">เพิ่มรายการ</button> <button class="btn ghost" type="button" id="fSplit">เพิ่ม + แยกส่วนประกอบ</button> <button class="btn ghost" type="button" id="cancelBtn" hidden>ยกเลิกการแก้ไข</button></p>
       </form>
       <div class="chips" id="presets" aria-label="เมนูที่เพิ่มบ่อย"></div>
       <p class="note">ค่าในเมนูลัดเป็นค่าประมาณต่อ 1 จาน/ชาม ปรับตัวเลขได้ก่อนกดเพิ่ม</p>
@@ -492,6 +527,54 @@ main{grid-template-columns:minmax(0,1fr)}
     $("cK").value=r1(f.k*b);$("cP").value=r1(f.p*b);$("cC").value=r1(f.c*b);$("cF").value=r1(f.a*b);$("cQty").value=r1(f.q);renderCalc();
   }
   function calcSheet(o){document.body.classList.toggle("calc-open",o);if(o){calcFoodOpts();calcLoadDay();renderCalc()}}
+  var dDate="",dIdx=-1,gIdx=-1,gtpl=null,gList=[];
+  function dItem(){var a=state.logs[dDate];return(a&&a[dIdx])||null}
+  function sumIngs(it){var s={k:0,p:0,c:0,f:0};(it.ing||[]).forEach(function(g){s.k+=g.k||0;s.p+=g.p||0;s.c+=g.c||0;s.f+=g.f||0});it.kcal=r1(s.k);it.p=r1(s.p);it.c=r1(s.c);it.f=r1(s.f)}
+  function syncDish(it){if(it.name&&it.qty>0){upsert(it,false);var f=findFood(it.name,it.unit);if(f)f.ing=(it.ing&&it.ing.length)?JSON.parse(JSON.stringify(it.ing)):undefined}}
+  function afterIng(it){if(!it.id)it.id=uid();if(it.ing&&it.ing.length)sumIngs(it);syncDish(it);save();render();renderDetail()}
+  function openDetail(d,i){dDate=d;dIdx=i;closeEditor();document.body.classList.add("detail-open");renderDetail()}
+  function closeDetail(){document.body.classList.remove("detail-open")}
+  function renderDetail(){
+    var it=dItem();if(!it){closeDetail();return}
+    $("dTitle").textContent=it.name||"อาหาร";
+    $("dSub").textContent="มื้อ"+it.meal+(it.qty>0?" · "+r1(it.qty)+" "+(it.unit||""):"");
+    var sm=$("dSum");sm.textContent="";
+    var e=document.createElement("div");e.className="dcard";var es=document.createElement("small");es.textContent="🔥 พลังงาน";var ev=document.createElement("strong");ev.textContent=r1(it.kcal||0)+" แคลอรี่";e.appendChild(es);e.appendChild(ev);sm.appendChild(e);
+    var g3=document.createElement("div");g3.className="g3";
+    [["คาร์บ",it.c,"ic-c"],["โปรตีน",it.p,"ic-p"],["ไขมัน",it.f,"ic-f"]].forEach(function(a){
+      var c=document.createElement("div");c.className="dcard";
+      var s=document.createElement("small");s.innerHTML='<svg class="mi" aria-hidden="true"><use href="#'+a[2]+'"/></svg>';s.appendChild(document.createTextNode(a[0]));
+      var v=document.createElement("strong");v.textContent=r1(a[1]||0)+" g";c.appendChild(s);c.appendChild(v);g3.appendChild(c);
+    });
+    sm.appendChild(g3);
+    var ul=$("dList");ul.textContent="";var ings=it.ing||[];
+    if(!ings.length){var em=document.createElement("li");em.className="empty";em.textContent="ยังไม่มีส่วนประกอบ";ul.appendChild(em)}
+    ings.forEach(function(x,i){
+      var li=document.createElement("li"),d=document.createElement("div");
+      var n=document.createElement("div");n.className="gn";n.textContent=x.n;
+      var m=document.createElement("div");m.className="meal";m.textContent=r1(x.k)+" แคลอรี่ • "+r1(x.q)+" "+x.u;
+      var m2=document.createElement("div");m2.className="meal";m2.textContent="โปรตีน "+r1(x.p)+" · คาร์บ "+r1(x.c)+" · ไขมัน "+r1(x.f)+" g";
+      d.appendChild(n);d.appendChild(m);d.appendChild(m2);
+      var act=document.createElement("div");act.className="act";
+      act.appendChild(mkBtn("del","✎","แก้ไข "+x.n,function(){openEditor(i)}));
+      act.appendChild(mkBtn("del","×","ลบ "+x.n,function(){it.ing.splice(i,1);afterIng(it)}));
+      li.appendChild(d);li.appendChild(act);ul.appendChild(li);
+    });
+    $("dNote").textContent=ings.length?"แคลอรี่และสารอาหารรวมคำนวณจากส่วนประกอบทั้งหมด":"ตอนนี้ใช้ตัวเลขรวมที่กรอกไว้ เมื่อเพิ่มส่วนประกอบ ตัวเลขรวมจะคิดจากส่วนประกอบแทน";
+  }
+  function gOpts(){
+    gList=CP.map(function(p){return{name:p[0],unit:p[2],k:p[3]/p[1],p:p[4]/p[1],c:p[5]/p[1],a:p[6]/p[1],q:p[1]}}).concat(state.foods.slice().sort(function(a,b){return(b.t||0)-(a.t||0)}));
+    var s=$("gFood");s.textContent="";var o=document.createElement("option");o.value="";o.textContent="— กรอกเอง —";s.appendChild(o);
+    gList.forEach(function(f,i){var p=document.createElement("option");p.value=i;p.textContent=(f.fav?"★ ":"")+f.name+" ("+f.unit+")";s.appendChild(p)});
+  }
+  function gCalc(){var q=nz("gQty");if(gtpl){$("gK").value=r1(gtpl.k*q);$("gP").value=r1(gtpl.p*q);$("gC").value=r1(gtpl.c*q);$("gF").value=r1(gtpl.a*q)}}
+  function openEditor(i){
+    var it=dItem();if(!it)return;gIdx=i;gOpts();$("gFood").value="";
+    if(i>=0){var x=it.ing[i];$("gName").value=x.n;fillUnitSel($("gUnit"),x.u);$("gQty").value=x.q;$("gK").value=x.k;$("gP").value=x.p;$("gC").value=x.c;$("gF").value=x.f;gtpl=x.q>0?{k:x.k/x.q,p:x.p/x.q,c:x.c/x.q,a:x.f/x.q}:null}
+    else{gtpl=null;$("gName").value="";fillUnitSel($("gUnit"),"กรัม");$("gQty").value=100;["gK","gP","gC","gF"].forEach(function(id){$(id).value=""})}
+    $("gDel").hidden=i<0;$("dEdit").hidden=false;$("dAdd").hidden=true;$("gName").focus();
+  }
+  function closeEditor(){gIdx=-1;gtpl=null;$("dEdit").hidden=true;$("dAdd").hidden=false}
   var pending=null,ptarget="list",curIt=null;
   function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
   var DB=null;
@@ -537,7 +620,7 @@ main{grid-template-columns:minmax(0,1fr)}
       n.textContent=f.name;m.textContent=u+" "+f.unit+" = "+r1(f.k*u)+" kcal · ล่าสุด "+r1(f.q)+" "+f.unit;
       d.appendChild(n);d.appendChild(m);
       var act=document.createElement("div");act.className="act";
-      act.appendChild(mkBtn("btn sm","เพิ่ม","",function(){var q=f.q;(state.logs[cur]=state.logs[cur]||[]).push({name:f.name,qty:q,unit:f.unit,meal:$("fMeal").value,kcal:r1(f.k*q),p:r1(f.p*q),c:r1(f.c*q),f:r1(f.a*q)});f.used++;f.t=Date.now();save();render()}));
+      act.appendChild(mkBtn("btn sm","เพิ่ม","",function(){var q=f.q;(state.logs[cur]=state.logs[cur]||[]).push({name:f.name,qty:q,unit:f.unit,meal:$("fMeal").value,kcal:r1(f.k*q),p:r1(f.p*q),c:r1(f.c*q),f:r1(f.a*q),id:uid(),ing:f.ing?JSON.parse(JSON.stringify(f.ing)):undefined});f.used++;f.t=Date.now();save();render()}));
       act.appendChild(mkBtn("btn ghost sm","แก้ก่อน","",function(){resetForm();fillForm(f.name,f.unit,f.q,f);$("fQty").focus();sheet(true)}));
       act.appendChild(mkBtn("del","×","ลบ "+f.name+" ออกจากประวัติ",function(){state.foods=state.foods.filter(function(x){return x!==f});save();render()}));
       li.appendChild(s);li.appendChild(d);li.appendChild(act);ul.appendChild(li);
@@ -627,7 +710,7 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
       var n=document.createElement("div");n.textContent=(it.name||"ไม่ระบุชื่อ")+(it.qty>0?" · "+r1(it.qty)+" "+(it.unit||""):"");
       var m=document.createElement("div");m.className="meal";
       var extra=[];if(it.p)extra.push("P "+it.p);if(it.c)extra.push("C "+it.c);if(it.f)extra.push("F "+it.f);
-      m.textContent="มื้อ"+it.meal+(extra.length?" · "+extra.join(" / ")+" g":"");
+      m.textContent="มื้อ"+it.meal+(extra.length?" · "+extra.join(" / ")+" g":"")+(it.ing&&it.ing.length?" · "+it.ing.length+" ส่วนประกอบ":"");l.className="tap";l.setAttribute("role","button");l.tabIndex=0;l.onclick=function(){openDetail(cur,idx)};l.onkeydown=function(e){if(e.key==="Enter")openDetail(cur,idx)};
       l.appendChild(n);l.appendChild(m);
       var k=document.createElement("strong");k.textContent=fmt(it.kcal)+" kcal";
       var d=document.createElement("button");d.className="del";d.type="button";d.textContent="×";d.setAttribute("aria-label","ลบ "+(it.name||"รายการ"));
@@ -690,8 +773,9 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
     var q=parseFloat($("fQty").value)||0,it={name:$("fName").value.trim(),qty:q,unit:$("fUnit").value.trim(),meal:$("fMeal").value,kcal:kcal,p:parseFloat($("fP").value)||0,c:parseFloat($("fC").value)||0,f:parseFloat($("fF").value)||0};
     var ed=editIdx>=0&&editDate===cur&&state.logs[cur]&&state.logs[cur][editIdx];
     it.id=(ed&&ed.id)||uid();
+    if(ed&&ed.ing&&ed.ing.length){var fc=(ed.qty>0&&it.qty>0)?it.qty/ed.qty:1;it.ing=ed.ing.map(function(g){return{n:g.n,q:r1(g.q*fc),u:g.u,k:r1(g.k*fc),p:r1(g.p*fc),c:r1(g.c*fc),f:r1(g.f*fc)}});sumIngs(it)}
     if(ed){state.logs[cur][editIdx]=it}else{(state.logs[cur]=state.logs[cur]||[]).push(it)}
-    var pend=pending;upsert(it,!ed);resetForm();save();if(pend)pput(it.id,pend).then(render);
+    var pend=pending;upsert(it,!ed);if(it.ing)syncDish(it);resetForm();save();if(pend)pput(it.id,pend).then(render);
     $("fName").focus();render();
   };
   $("fUnit").addEventListener("change",function(){var n=this.value==="__new";$("unitNew").hidden=!n;if(n)$("unitNewIn").focus()});
@@ -706,7 +790,7 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
   $("scrim").onclick=closeAll;
   document.addEventListener("keydown",function(e){if(e.key==="Escape")closeAll()});
   function sheet(o){document.body.classList.toggle("sheet-open",o);if(o)(tpl?$("fQty"):$("fName")).focus()}
-  function closeAll(){document.body.classList.remove("menu-open","sheet-open","calc-open","fab-open");$("fabMenu").hidden=true;$("menuBtn").setAttribute("aria-expanded","false")}
+  function closeAll(){document.body.classList.remove("menu-open","sheet-open","calc-open","detail-open","fab-open");$("fabMenu").hidden=true;$("menuBtn").setAttribute("aria-expanded","false")}
   var toastT;
   function toast(m){var t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("show")},2200)}
   $("saveBtn").onclick=function(){
@@ -737,6 +821,29 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
   $("fmAdd").onclick=function(){fabMenu(false);sheet(true)};
   $("fmCalc").onclick=function(){fabMenu(false);calcSheet(true)};
   document.addEventListener("click",function(e){if(!$("fabMenu").hidden&&!e.target.closest("#fab,#fabMenu"))fabMenu(false)});
+  $("dClose").onclick=closeDetail;
+  $("dSave").onclick=function(){closeDetail();toast("บันทึกแล้ว")};
+  $("dAdd").onclick=function(){openEditor(-1)};
+  $("gCancel").onclick=closeEditor;
+  $("gDel").onclick=function(){var it=dItem();if(it&&gIdx>=0){it.ing.splice(gIdx,1);afterIng(it)}closeEditor()};
+  $("gFood").addEventListener("change",function(){var v=this.value;if(v==="")return;var f=gList[+v];if(!f)return;gtpl=f;$("gName").value=f.name;fillUnitSel($("gUnit"),f.unit);$("gQty").value=r1(f.q);gCalc()});
+  $("gQty").addEventListener("input",gCalc);
+  ["gName","gUnit","gK","gP","gC","gF"].forEach(function(id){$(id).addEventListener("input",function(){gtpl=null})});
+  $("gSave").onclick=function(){
+    var it=dItem();if(!it)return;it.ing=it.ing||[];
+    var g={n:$("gName").value.trim()||"ส่วนประกอบ",q:nz("gQty"),u:$("gUnit").value,k:r1(nz("gK")),p:r1(nz("gP")),c:r1(nz("gC")),f:r1(nz("gF"))};
+    if(gIdx>=0)it.ing[gIdx]=g;else it.ing.push(g);
+    if(g.q>0)upsert({name:g.n,qty:g.q,unit:g.u,kcal:g.k,p:g.p,c:g.c,f:g.f},true);
+    afterIng(it);closeEditor();
+  };
+  $("fSplit").onclick=function(){
+    if(!$("fName").value.trim()){$("fName").focus();return}
+    if(!$("fKcal").value)$("fKcal").value=0;
+    var di=(editIdx>=0&&editDate===cur)?editIdx:-1,before=(state.logs[cur]||[]).length;
+    $("addBtn").click();
+    var arr=state.logs[cur]||[],idx=di>=0?di:(arr.length>before?arr.length-1:-1);
+    if(idx>=0)openDetail(cur,idx);
+  };
   $("calcClose").onclick=function(){calcSheet(false)};
   fillUnitSel($("cUnit"),"กรัม");
   $("cFood").addEventListener("change",loadFood);
