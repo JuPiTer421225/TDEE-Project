@@ -135,6 +135,67 @@ main{max-width:600px;padding-bottom:104px}
 #dEdit input,#dEdit select{background:var(--surface)}
 .tap{cursor:pointer}
 .phimg{grid-column:1/-1;width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:14px;cursor:pointer;display:block;background:var(--bg)}
+/* ---- compact mobile UI (reference: health dashboard) ---- */
+html{font-size:15px}
+input,select{font-size:16px}
+main{padding:12px 14px 120px;gap:12px}
+.panel{border-radius:18px;padding:14px}
+h2{font-size:1rem;margin:0 0 10px}
+.top{flex-wrap:nowrap;gap:10px;align-items:center}
+.top h1{font-size:1.05rem!important;margin:0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.menubtn{width:40px;height:40px;border-radius:12px}
+.menubtn svg{width:20px;height:20px}
+.week{padding:12px 12px 10px}
+.whead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.95rem}
+.wnav{display:flex;gap:6px}
+.wbtn{width:30px;height:30px;border-radius:50%;border:0;background:var(--bg);color:var(--ink);display:grid;place-items:center;cursor:pointer;font-size:1rem;padding:0;position:relative}
+.calbtn input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer;border:0;padding:0;background:transparent}
+.wdays{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.wd{border:0;background:transparent;color:var(--ink);border-radius:14px;padding:7px 0;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font:inherit}
+.wd small{color:var(--mute);font-size:.72rem}
+.wd strong{font-size:.95rem}
+.wd.sel{background:var(--accent)}
+.wd.sel small,.wd.sel strong{color:#111}
+.wd.today:not(.sel) strong{color:var(--accent)}
+.hero{padding:16px;border-radius:20px;gap:10px}
+.hl{font-size:.78rem}
+.hero .big b{font-size:2rem}
+.hero .big span{font-size:.85rem}
+.hero .note{font-size:.75rem}
+.ringwrap{width:72px;height:72px}
+.ring{-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 8px),#000 calc(100% - 7px));mask:radial-gradient(farthest-side,transparent calc(100% - 8px),#000 calc(100% - 7px))}
+#ringTxt{font-size:.85rem}
+.hero .stats{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px}
+.hero .stats[style]{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.hero .stats>div{padding:7px 4px;border-radius:12px}
+.hero .stats small{font-size:.68rem}
+.hero .stats strong{font-size:.9rem}
+.hero .stats .mi{width:24px;height:24px;margin-bottom:0}
+#sPp,#sFp,#sCp{font-size:.66rem}
+#list li.item{padding:10px 12px;margin-bottom:8px;gap:6px 10px}
+.ico{width:40px;height:40px;font-size:1.15rem}
+#list li.item strong{font-size:.95rem}
+#list li.item .act{padding-top:6px}
+.act .del{width:30px;height:30px;font-size:.9rem}
+.meal{font-size:.75rem}
+.phimg{aspect-ratio:16/9;max-height:170px}
+.dph{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:14px;display:block;margin-bottom:10px;cursor:pointer}
+.cstat{display:flex;align-items:baseline;gap:8px;margin:-2px 0 6px;flex-wrap:wrap}
+.cstat strong{font-size:1.5rem}
+.chart .col i.dim{opacity:.4}
+.tabbar{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(600px,100%);z-index:9;background:var(--surface);border-radius:22px 22px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.08);display:grid;grid-template-columns:1fr 1fr 74px 1fr 1fr;padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px))}
+.tab{border:0;background:none;color:var(--mute);display:flex;flex-direction:column;align-items:center;gap:3px;font:inherit;font-size:.7rem;cursor:pointer;padding:4px 0}
+.tab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tab.on{color:var(--ink);font-weight:700}
+.tab.on svg{stroke:var(--accent)}
+.fab{right:auto;left:calc(50% - 29px);bottom:calc(30px + env(safe-area-inset-bottom,0px))}
+.fabmenu{right:auto;left:50%;transform:translateX(-50%);align-items:center;bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+#toast{bottom:calc(112px + env(safe-area-inset-bottom,0px))}
+@media (max-width:360px){.top h1{font-size:.95rem!important}.hero .big b{font-size:1.8rem}}
+.trk{height:112px}
+.trk .pct{position:absolute;left:50%;transform:translateX(-50%);width:max-content;padding:0 3px;background:var(--surface);border-radius:6px;white-space:nowrap;font-size:.7rem;color:var(--mute);z-index:2;pointer-events:none}
+.tick{opacity:.35;z-index:1}
+.col.sel .pct{color:var(--ink);font-weight:700}
 .ico::after{content:"📷";position:absolute;right:-5px;bottom:-5px;width:19px;height:19px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:.65rem;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .ico.hasph::after{display:none}
 #photoView{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.75);display:grid;place-items:center;padding:16px}
@@ -242,7 +303,7 @@ main{grid-template-columns:minmax(0,1fr)}
   </div>
   <button type="button" class="addrow" id="dAdd">+ เพิ่มส่วนประกอบ</button>
   <p class="note" id="dNote"></p>
-  <button type="button" class="btn" id="dSave" style="width:100%;margin-top:12px;padding:14px">บันทึก</button>
+  <div class="act" style="margin-top:12px"><button type="button" class="menubtn" id="dPhoto" aria-label="เพิ่มรูปภาพ" title="เพิ่มรูปภาพ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg></button><button type="button" class="btn" id="dSave" style="flex:1;padding:12px">บันทึก</button></div>
 </section>
 <input type="file" id="photoIn" accept="image/*" hidden>
 <div id="photoView" hidden><div class="pv"><img id="pvImg" alt="รูปอาหาร"><p class="note" id="pvCap"></p><div class="act"><button type="button" class="btn sm" id="pvChange">เปลี่ยนรูป</button><button type="button" class="btn ghost sm" id="pvDel">ลบรูป</button><button type="button" class="btn ghost sm" id="pvClose">ปิด</button></div></div></div>
@@ -269,19 +330,25 @@ main{grid-template-columns:minmax(0,1fr)}
 </symbol>
 </svg>
 <button type="button" class="fab" id="fab" aria-label="เมนูเพิ่ม" aria-expanded="false">+</button>
+<nav class="tabbar" aria-label="เมนูหลัก">
+  <button type="button" class="tab on" id="tHome"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>หน้าหลัก</span></button>
+  <button type="button" class="tab" id="tStats"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10M12 20V4M19 20v-7"/></svg><span>สถิติ</span></button>
+  <span aria-hidden="true"></span>
+  <button type="button" class="tab" id="tLib"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg><span>ประวัติ</span></button>
+  <button type="button" class="tab" id="tMenu"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></svg><span>เมนู</span></button>
+</nav>
 <div class="fabmenu" id="fabMenu" hidden><button type="button" id="fmCalc">🧮 คำนวณสัดส่วนอาหาร</button><button type="button" id="fmLib">⭐ ประวัติและรายการโปรด</button><button type="button" id="fmAdd">🍽️ เพิ่มอาหาร</button></div>
 <main>
   <div class="top">
     <button type="button" class="menubtn" id="menuBtn" aria-label="เปิดเมนู" aria-expanded="false" aria-controls="planSide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h16"/></svg></button>
+    <h1>บันทึกแคลอรี่ประจำวัน</h1>
     <button type="button" class="menubtn" id="saveBtn" aria-label="บันทึก"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h11l4 4v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 3v5h7V3M8 21v-7h8v7"/></svg></button>
     <div id="toast" role="status" aria-live="polite"></div>
-    <h1>บันทึกแคลอรี่ประจำวัน</h1>
-    <div class="datebar">
-      <button class="btn ghost" id="prev" aria-label="วันก่อนหน้า">‹</button>
-      <input type="date" id="date" aria-label="เลือกวันที่">
-      <button class="btn ghost" id="next" aria-label="วันถัดไป">›</button>
-    </div>
   </div>
+  <section class="panel week" id="weekCard">
+    <div class="whead"><strong id="wMonth"></strong><span class="wnav"><button type="button" class="wbtn" id="prev" aria-label="สัปดาห์ก่อนหน้า">‹</button><label class="wbtn calbtn" aria-label="เลือกวันที่"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg><input type="date" id="date" aria-label="เลือกวันที่"></label><button type="button" class="wbtn" id="next" aria-label="สัปดาห์ถัดไป">›</button></span></div>
+    <div class="wdays" id="wDays"></div>
+  </section>
 
   <section class="panel hero" aria-live="polite">
     <div class="herotop"><div><small class="hl">แคลอรี่วันนี้</small><div class="big"><b id="remain">–</b><span id="remainLabel">kcal ที่เหลือ</span></div><div class="note" id="phaseNote"></div></div>
@@ -399,10 +466,11 @@ main{grid-template-columns:minmax(0,1fr)}
       <ul id="list"></ul>
       <div class="macro" id="macros" style="margin-top:12px"></div>
     </section>
-    <section class="panel">
-      <h2>7 วันล่าสุด</h2>
+    <section class="panel" id="chartPanel">
+      <h2>สถิติสัปดาห์นี้</h2>
+      <div class="cstat"><strong id="cKcal">0</strong><span>kcal</span><span class="note" id="cTgt"></span></div>
       <div class="chart" id="chart"></div>
-      <p class="note">ขีดสีเข้มคือเป้าหมายของแต่ละวันตามแผนที่ตั้งไว้ แถบสีแดงคือวันที่กินเกินเป้า</p>
+      <p class="note">ตัวเลขบนแท่งคือ % ของเป้าหมายแต่ละวัน ขีดสีเข้มคือเป้าหมาย แท่งสีแดงคือกินเกินเป้า</p>
     </section>
   </div>
 </main>
@@ -543,6 +611,7 @@ main{grid-template-columns:minmax(0,1fr)}
     $("dTitle").textContent=it.name||"อาหาร";
     $("dSub").textContent="มื้อ"+it.meal+(it.qty>0?" · "+r1(it.qty)+" "+(it.unit||""):"");
     var sm=$("dSum");sm.textContent="";
+    if(it.id)pget(it.id).then(function(u){if(u&&dItem()===it&&!sm.querySelector(".dph")){var im=document.createElement("img");im.className="dph";im.src=u;im.alt="รูปอาหาร";im.onclick=function(){photoClick(it)};sm.insertBefore(im,sm.firstChild)}});
     var e=document.createElement("div");e.className="dcard";var es=document.createElement("small");es.textContent="🔥 พลังงาน";var ev=document.createElement("strong");ev.textContent=r1(it.kcal||0)+" แคลอรี่";e.appendChild(es);e.appendChild(ev);sm.appendChild(e);
     var g3=document.createElement("div");g3.className="g3";
     [["คาร์บ",it.c,"ic-c"],["โปรตีน",it.p,"ic-p"],["ไขมัน",it.f,"ic-f"]].forEach(function(a){
@@ -704,9 +773,22 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
     });
   }
 
+  var TH_D=["อา","จ","อ","พ","พฤ","ศ","ส"];
+  function weekStart(s){var d=new Date(s+"T12:00:00");d.setDate(d.getDate()-d.getDay());return iso(d)}
+  function renderWeek(){
+    var st=weekStart(cur),box=$("wDays");box.textContent="";
+    $("wMonth").textContent=new Date(cur+"T12:00:00").toLocaleDateString("th-TH",{month:"long",year:"numeric"});
+    var td=iso(new Date());
+    for(var i=0;i<7;i++){
+      var d=shift(st,i),b=document.createElement("button");b.type="button";b.className="wd"+(d===cur?" sel":"")+(d===td?" today":"");
+      var a=document.createElement("small");a.textContent=TH_D[i];var n=document.createElement("strong");n.textContent=+d.slice(8);
+      b.appendChild(a);b.appendChild(n);b.setAttribute("aria-label",d);
+      (function(dd){b.onclick=function(){cur=dd;render()}})(d);box.appendChild(b);
+    }
+  }
   function render(){
     $("date").value=cur;
-    renderPlans();renderLib();renderMacro();
+    renderPlans();renderLib();renderMacro();renderWeek();
     var pf=state.profile;$("profSum").textContent=pf.age&&pf.w&&pf.h?pf.age+" ปี · "+pf.w+" kg · "+pf.h+" cm":"กรอกข้อมูลเพื่อคำนวณ TDEE";
     var base=calc(),c=base?Object.assign({},base):null,eaten=dayTotal(cur);
     var tf=c?targetFor(cur,base):null;if(c)c.target=tf.kcal;
@@ -734,7 +816,7 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
       var l=document.createElement("div");
       var n=document.createElement("div");n.textContent=(it.name||"ไม่ระบุชื่อ")+(it.qty>0?" · "+r1(it.qty)+" "+(it.unit||""):"");
       var m=document.createElement("div");m.className="meal";
-      var extra=[];if(it.p)extra.push("P "+it.p);if(it.c)extra.push("C "+it.c);if(it.f)extra.push("F "+it.f);
+      var extra=[];if(it.p)extra.push("P "+r1(it.p));if(it.c)extra.push("C "+r1(it.c));if(it.f)extra.push("F "+r1(it.f));
       m.textContent="มื้อ"+it.meal+(extra.length?" · "+extra.join(" / ")+" g":"")+(it.ing&&it.ing.length?" · "+it.ing.length+" ส่วนประกอบ":"");l.className="tap";l.setAttribute("role","button");l.tabIndex=0;l.onclick=function(){openDetail(cur,idx)};l.onkeydown=function(e){if(e.key==="Enter")openDetail(cur,idx)};
       l.appendChild(n);l.appendChild(m);
       var k=document.createElement("strong");k.textContent=fmt(it.kcal)+" kcal";
@@ -767,19 +849,20 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
     });
     // chart
     var ch=$("chart");ch.textContent="";
-    var days=[];for(var n=6;n>=0;n--)days.push(shift(cur,-n));
+    var days=[],ws=weekStart(cur);for(var n=0;n<7;n++)days.push(shift(ws,n));
     var vals=days.map(dayTotal);
     var tg=days.map(function(d){return base?targetFor(d,base).kcal:0});
     var max=Math.max.apply(null,vals.concat(tg,[500]))*1.1;
+    var ci=days.indexOf(cur);$("cKcal").textContent=fmt(vals[ci]||0);$("cTgt").textContent=tg[ci]?"เป้าหมาย "+fmt(tg[ci])+" kcal":"";
     days.forEach(function(d,ix){
       var col=document.createElement("div");col.className="col"+(d===cur?" sel":"");
-      var v=document.createElement("span");v.textContent=vals[ix]?fmt(vals[ix]):"";
+      var v=document.createElement("span");v.textContent=vals[ix]?(tg[ix]?Math.round(vals[ix]/tg[ix]*100)+"%":fmt(vals[ix])):"";
       var bar=document.createElement("i");bar.style.height=(vals[ix]/max*100)+"%";
-      if(tg[ix]&&vals[ix]>tg[ix])bar.className="over";
-      var lb=document.createElement("span");lb.textContent=d.slice(8)+"/"+d.slice(5,7);
+      bar.className=(tg[ix]&&vals[ix]>tg[ix])?"over":(d===cur?"cur":"dim");
+      var lb=document.createElement("span");lb.textContent=TH_D[ix];
       var trk=document.createElement("div");trk.className="trk";trk.appendChild(bar);
       if(tg[ix]){var tk=document.createElement("b");tk.className="tick";tk.style.bottom=(tg[ix]/max*100)+"%";trk.appendChild(tk)}
-      col.appendChild(v);col.appendChild(trk);col.appendChild(lb);ch.appendChild(col);
+      if(v.textContent){v.className="pct";v.style.bottom="calc("+(vals[ix]/max*100)+"% + 3px)";trk.appendChild(v)}col.appendChild(trk);col.appendChild(lb);ch.appendChild(col);
     });
   }
 
@@ -832,13 +915,13 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
       if(ptarget==="form"){pending=u;showPrev();return}
       if(!curIt)return;
       if(!curIt.id)curIt.id=uid();curIt.ph=1;delete curIt.pu;save();
-      return pput(curIt.id,u).then(function(){photoHook("put",curIt.id,u);render();toast("บันทึกรูปแล้ว")});
+      return pput(curIt.id,u).then(function(){photoHook("put",curIt.id,u);render();if(document.body.classList.contains("detail-open"))renderDetail();toast("บันทึกรูปแล้ว")});
     }).catch(function(e){toast(e&&e.message?e.message:"บันทึกรูปไม่สำเร็จ")});
   };
   $("pvClose").onclick=function(){$("photoView").hidden=true};
   $("photoView").addEventListener("click",function(e){if(e.target===this)this.hidden=true});
   $("pvChange").onclick=function(){$("photoView").hidden=true;ptarget="list";pick()};
-  $("pvDel").onclick=function(){if(curIt&&curIt.id)pdel(curIt.id).then(function(){delete curIt.ph;delete curIt.pu;save();photoHook("del",curIt.id);$("photoView").hidden=true;render()})};
+  $("pvDel").onclick=function(){if(curIt&&curIt.id)pdel(curIt.id).then(function(){delete curIt.ph;delete curIt.pu;save();photoHook("del",curIt.id);$("photoView").hidden=true;render();if(document.body.classList.contains("detail-open"))renderDetail()})};
   $("fPhoto").onclick=function(){ptarget="form";pick()};
   $("fPhotoX").onclick=function(){pending=null;showPrev()};
   function fabMenu(o){$("fabMenu").hidden=!o;document.body.classList.toggle("fab-open",o);$("fab").setAttribute("aria-expanded",o)}
@@ -872,6 +955,12 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
   function libSheet(o){document.body.classList.toggle("lib-open",o);if(o)renderLib()}
   $("fmLib").onclick=function(){fabMenu(false);libSheet(true)};
   $("libClose").onclick=function(){libSheet(false)};
+  $("tHome").onclick=function(){window.scrollTo({top:0,behavior:"smooth"})};
+  $("tStats").onclick=function(){$("chartPanel").scrollIntoView({behavior:"smooth",block:"start"})};
+  $("tLib").onclick=function(){libSheet(true)};
+  $("tMenu").onclick=function(){$("menuBtn").click()};
+  window.addEventListener("scroll",function(){var on=$("chartPanel").getBoundingClientRect().top<window.innerHeight*0.55;$("tHome").classList.toggle("on",!on);$("tStats").classList.toggle("on",on)},{passive:true});
+  $("dPhoto").onclick=function(){var it=dItem();if(!it)return;ptarget="list";curIt=it;pick()};
   $("calcClose").onclick=function(){calcSheet(false)};
   fillUnitSel($("cUnit"),"กรัม");
   $("cFood").addEventListener("change",loadFood);
@@ -908,8 +997,8 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
     state.plans.push(pl);
     save();$("plKcal").value="";$("plLabel").value="";render();
   };
-  $("prev").onclick=function(){cur=shift(cur,-1);render()};
-  $("next").onclick=function(){cur=shift(cur,1);render()};
+  $("prev").onclick=function(){cur=shift(cur,-7);render()};
+  $("next").onclick=function(){cur=shift(cur,7);render()};
   $("date").onchange=function(){if(this.value){cur=this.value;render()}};
 
   $("profSlot").appendChild($("profSec"));load();bindProfile();renderPresets();buildUnits("จาน");$("plDate").value=cur;render();
