@@ -173,7 +173,6 @@ h2{font-size:1rem;margin:0 0 10px}
 .hero .stats .mi{width:24px;height:24px;margin-bottom:0}
 #sPp,#sFp,#sCp{font-size:.66rem}
 #list li.item{padding:10px 12px;margin-bottom:8px;gap:6px 10px}
-.ico{width:40px;height:40px;font-size:1.15rem}
 #list li.item strong{font-size:.95rem}
 #list li.item .act{padding-top:6px}
 .act .del{width:30px;height:30px;font-size:.9rem}
@@ -195,6 +194,12 @@ h2{font-size:1rem;margin:0 0 10px}
 .trk{height:112px}
 .trk .pct{position:absolute;left:50%;transform:translateX(-50%);width:max-content;padding:0 3px;background:var(--surface);border-radius:6px;white-space:nowrap;font-size:.7rem;color:var(--mute);z-index:2;pointer-events:none}
 .tick{opacity:.35;z-index:1}
+.lth{width:48px;height:48px;border-radius:14px;background:var(--bg) center/cover no-repeat;display:grid;place-items:center;font-size:1.3rem}
+.libr{grid-template-columns:auto auto minmax(0,1fr);gap:6px 10px}
+.libr>div:nth-child(3){min-width:0;overflow-wrap:anywhere}
+.libr .act{grid-column:1/-1;justify-content:flex-end}
+@media (min-width:520px){.libr{grid-template-columns:auto auto minmax(0,1fr) auto}.libr .act{grid-column:auto}}
+.dph{max-height:190px}
 .col.sel .pct{color:var(--ink);font-weight:700}
 .ico::after{content:"📷";position:absolute;right:-5px;bottom:-5px;width:19px;height:19px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-size:.65rem;box-shadow:0 1px 4px rgba(0,0,0,.25)}
 .ico.hasph::after{display:none}
@@ -226,7 +231,7 @@ input,select{border-radius:12px}
 .ring.over{background:conic-gradient(#FF8A9B calc(var(--pct)*1%),rgba(255,255,255,.14) 0)}
 #ringTxt{position:absolute;inset:0;display:grid;place-items:center;font-weight:700}
 #list li.item{grid-template-columns:auto 1fr auto;background:var(--surface);border:0;border-radius:16px;padding:12px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
-.ico{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;position:relative;border:0;padding:0;cursor:pointer;background-size:cover;background-position:center}
+.ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.3rem;position:relative;border:0;padding:0;cursor:pointer;background-size:cover;background-position:center}
 .act .del{width:34px;height:34px;border-radius:50%;background:var(--bg);display:grid;place-items:center;padding:0;font-size:1rem}
 .fab{position:fixed;right:max(16px,calc(50% - 284px));bottom:calc(20px + env(safe-area-inset-bottom,0px));width:58px;height:58px;border-radius:50%;border:0;color:#111;font-size:2rem;line-height:1;padding:0;background:linear-gradient(135deg,#FFBE55,#F59A0C);box-shadow:0 8px 20px rgba(245,154,12,.45);cursor:pointer;z-index:10}
 body.menu-open .fab,body.sheet-open .fab,body.calc-open .fab,body.detail-open .fab,body.lib-open .fab,body.lib-open .fabmenu,body.menu-open .fabmenu,body.sheet-open .fabmenu,body.calc-open .fabmenu,body.detail-open .fabmenu{display:none}
@@ -704,6 +709,7 @@ main{grid-template-columns:minmax(0,1fr)}
   function renderLib(){
     document.querySelectorAll("[data-tab]").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-tab")===tab)});
     var ul=$("libList");ul.textContent="";var q=$("libQ").value.trim().toLowerCase();
+    var phMap={};Object.keys(state.logs).sort().forEach(function(dd){state.logs[dd].forEach(function(e){if(e.id&&e.ph&&e.name)phMap[fkey(e.name,e.unit||"")]=e})});
     var fs=state.foods.filter(function(f){return(tab==="rec"||f.fav)&&(!q||f.name.toLowerCase().indexOf(q)>-1)}).sort(function(a,b){return b.t-a.t}).slice(0,30);
     if(!fs.length){var e=document.createElement("li");e.className="empty";e.textContent=tab==="fav"?"ยังไม่มีรายการโปรด กด ☆ ที่อาหารในรายการวันนี้หรือในประวัติ":"ยังไม่มีประวัติ อาหารที่บันทึกแล้วจะมาอยู่ที่นี่";ul.appendChild(e)}
     fs.forEach(function(f){
@@ -717,7 +723,8 @@ main{grid-template-columns:minmax(0,1fr)}
       act.appendChild(mkBtn("btn sm","เพิ่ม","",function(){var q=f.q;(state.logs[cur]=state.logs[cur]||[]).push({name:f.name,qty:q,unit:f.unit,meal:$("fMeal").value,kcal:r1(f.k*q),p:r1(f.p*q),c:r1(f.c*q),f:r1(f.a*q),id:uid(),ing:f.ing?JSON.parse(JSON.stringify(f.ing)):undefined});f.used++;f.t=Date.now();save();render();libSheet(false);toast("เพิ่มลงบันทึกแล้ว")}));
       act.appendChild(mkBtn("btn ghost sm","แก้ก่อน","",function(){libSheet(false);resetForm();fillForm(f.name,f.unit,f.q,f);$("fQty").focus();sheet(true)}));
       act.appendChild(mkBtn("del","×","ลบ "+f.name+" ออกจากประวัติ",function(){state.foods=state.foods.filter(function(x){return x!==f});save();render()}));
-      li.appendChild(s);li.appendChild(d);li.appendChild(act);ul.appendChild(li);
+      var th=document.createElement("span");th.className="lth";th.textContent="🍽️";var pe=phMap[fkey(f.name,f.unit||"")];if(pe)pget(pe.id).then(function(u){if(u){th.style.backgroundImage="url("+u+")";th.textContent=""}});
+      li.appendChild(th);li.appendChild(s);li.appendChild(d);li.appendChild(act);ul.appendChild(li);
     });
   }
   function todayKcal(){var b=calc();return b?targetFor(cur,b).kcal:0}
@@ -827,7 +834,7 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
       act.appendChild(mkBtn("del","✎","แก้ไข "+(it.name||"รายการ"),function(){loadEntry(it,idx)}));
       act.appendChild(d);
       var ic=document.createElement("button");ic.type="button";ic.className="ico";ic.setAttribute("aria-label","แนบรูปอาหาร");ic.textContent={"เช้า":"🌅","กลางวัน":"☀️","เย็น":"🌙","ของว่าง":"🍎"}[it.meal]||"🍽️";ic.style.background={"เช้า":"#FFF1D6","กลางวัน":"#FFE0A8","เย็น":"#EAE6DD","ของว่าง":"#FFD9C2"}[it.meal]||"#EEE";
-      ic.onclick=function(){photoClick(it)};if(it.id)pget(it.id).then(function(u){if(u){ic.classList.add("hasph");var im=document.createElement("img");im.className="phimg";im.src=u;im.alt="รูป "+(it.name||"อาหาร");im.onclick=function(){photoClick(it)};li.insertBefore(im,act)}});
+      ic.onclick=function(){photoClick(it)};if(it.id)pget(it.id).then(function(u){if(u){ic.classList.add("hasph");ic.style.backgroundImage="url("+u+")";ic.style.backgroundSize="cover";ic.style.backgroundPosition="center";ic.style.backgroundRepeat="no-repeat";ic.textContent=""}});
       li.appendChild(ic);li.appendChild(l);li.appendChild(k);li.appendChild(act);list.appendChild(li);
     });
     // macros
