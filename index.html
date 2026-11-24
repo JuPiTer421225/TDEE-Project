@@ -399,11 +399,13 @@ main{grid-template-columns:minmax(0,1fr)}
     </details>
     <hr class="sep">
     <details id="syncBox"><summary><span>ซิงก์ข้อมูล</span><small id="syncSum">ยังไม่ได้เชื่อมต่อ</small></summary>
-      <label for="syncKey">รหัสซิงก์</label>
-      <input id="syncKey" type="password" autocomplete="off" placeholder="รหัสที่ตั้งไว้ใน Vercel (SYNC_PASSWORD)">
+      <label for="syncUser">ชื่อบัญชี</label>
+      <input id="syncUser" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="เช่น somchai">
+      <label for="syncKey" style="margin-top:8px">รหัสผ่าน</label>
+      <input id="syncKey" type="password" autocomplete="current-password" placeholder="รหัสผ่านของบัญชีนี้">
       <p class="act" style="margin:10px 0 0"><button type="button" class="btn sm" id="syncOn">เชื่อมต่อ</button><button type="button" class="btn ghost sm" id="syncOff">ตัดการเชื่อมต่อ</button></p>
       <p class="note" id="syncMsg"></p>
-      <p class="note">ถ้าเครื่องนี้มีข้อมูลอยู่แล้ว ตอนเชื่อมต่อครั้งแรก ข้อมูลชุดที่แก้ไขล่าสุดจะเป็นฝ่ายชนะทั้งชุด รูปอาหารซิงก์ด้วย (ส่งทีละรูป)</p>
+      <p class="note">ถ้าเครื่องนี้มีข้อมูลอยู่แล้ว ตอนเชื่อมต่อครั้งแรก ข้อมูลชุดที่แก้ไขล่าสุดจะเป็นฝ่ายชนะทั้งชุด รูปอาหารซิงก์ด้วย (ส่งทีละรูป) ข้อมูลแยกตามบัญชี ถ้าเปลี่ยนไปใช้อีกบัญชีบนเครื่องเดิม ข้อมูลในเครื่องจะถูกล้างก่อน (เมื่อยืนยัน)</p>
     </details>
   </aside>
 
@@ -483,17 +485,27 @@ main{grid-template-columns:minmax(0,1fr)}
 <script>
 (function(){
   var KEY="tdee-tracker-v1";
-  var SK="tdee-sync-key",skey="",ready=false,pushT=null,base=0;
-  function sKey(){try{return localStorage.getItem(SK)||""}catch(e){return""}}
+  var SK="tdee-sync-key",SU="tdee-sync-user",SO="tdee-sync-owner",skey="",suser="",ready=false,pushT=null,base=0;
+  function lsGet(k){try{return localStorage.getItem(k)||""}catch(e){return""}}
+  function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  function sKey(){return lsGet(SK)}
+  function resetLocal(){
+    state={profile:{sex:"m",age:30,w:65,h:170,act:"1.375",goal:"0"},logs:{},plans:[],foods:[],units:[],macro:{mode:"pct",p:"",f:"",c:""},updated:0};
+    lsSet(KEY,JSON.stringify(state));
+    (DB?DB.then(function(db){db.close()}).catch(function(){}):Promise.resolve()).then(function(){DB=null;try{indexedDB.deleteDatabase("tdee-photos")}catch(e){}});
+    [["pSex","sex"],["pAge","age"],["pW","w"],["pH","h"],["pAct","act"],["pGoal","goal"]].forEach(function(a){$(a[0]).value=state.profile[a[1]]});
+    buildUnits("จาน");render();
+  }
   function api(method,body){
-    return fetch("/api/data",{method:method,cache:"no-store",headers:{"Content-Type":"application/json","x-sync-key":skey},body:body?JSON.stringify(body):undefined}).then(function(r){
-      if(r.status===401)throw new Error("รหัสซิงก์ไม่ถูกต้อง");
+    return fetch("/api/data",{method:method,cache:"no-store",headers:{"Content-Type":"application/json","x-sync-key":skey,"x-sync-user":encodeURIComponent(suser)},body:body?JSON.stringify(body):undefined}).then(function(r){
+      if(r.status===401)throw new Error("ชื่อบัญชีหรือรหัสผ่านไม่ถูกต้อง");
+      if(r.status===429)throw new Error("ลองผิดหลายครั้งเกินไป กรุณารอ 15 นาทีแล้วลองใหม่");
       if(r.status===404)throw new Error("ไม่พบ /api/data (ซิงก์ใช้ได้เฉพาะเวอร์ชันที่ deploy บน Vercel)");
       if(!r.ok)throw new Error("เซิร์ฟเวอร์ตอบ "+r.status);
       return r.json();
     });
   }
-  function setSync(t,m){$("syncSum").textContent=t;if(m!==undefined)$("syncMsg").textContent=m}
+  function setSync(t,m){$("syncSum").textContent=t;if(m!==undefined)$("syncMsg").textContent=(suser&&m?"บัญชี "+suser+" · ":"")+m}
   function applyRemote(d){
     var oldPh={};Object.keys(state.logs).forEach(function(k){state.logs[k].forEach(function(it){if(it.id&&it.ph)oldPh[it.id]=1})});
     state.profile=Object.assign(state.profile,d.profile||{});state.logs=d.logs||{};state.plans=d.plans||[];state.foods=d.foods||[];state.units=d.units||[];
@@ -653,7 +665,7 @@ main{grid-template-columns:minmax(0,1fr)}
     $("gDel").hidden=i<0;$("dEdit").hidden=false;$("dAdd").hidden=true;$("gName").focus();
   }
   function closeEditor(){gIdx=-1;gtpl=null;$("dEdit").hidden=true;$("dAdd").hidden=false}
-  function photoApi(method,id,body){return fetch("/api/photo?id="+encodeURIComponent(id),{method:method,cache:"no-store",headers:{"Content-Type":"application/json","x-sync-key":skey},body:body?JSON.stringify(body):undefined}).then(function(r){if(!r.ok)throw new Error("photo "+r.status);return r.json()})}
+  function photoApi(method,id,body){return fetch("/api/photo?id="+encodeURIComponent(id),{method:method,cache:"no-store",headers:{"Content-Type":"application/json","x-sync-key":skey,"x-sync-user":encodeURIComponent(suser)},body:body?JSON.stringify(body):undefined}).then(function(r){if(!r.ok)throw new Error("photo "+r.status);return r.json()})}
   function findEntry(id){var f=null;Object.keys(state.logs).forEach(function(d){state.logs[d].forEach(function(it){if(it.id===id)f=it})});return f}
   function photoHook(op,id,data){
     if(!skey||!ready)return;
@@ -1009,9 +1021,19 @@ function macroTxt(p){var t=p.m?macroTargets(p.kcal,p.m):null;return t?" · P "+M
   $("date").onchange=function(){if(this.value){cur=this.value;render()}};
 
   $("profSlot").appendChild($("profSec"));load();bindProfile();renderPresets();buildUnits("จาน");$("plDate").value=cur;render();
-  skey=sKey();if(skey)pull();
-  $("syncOn").onclick=function(){var v=$("syncKey").value.trim();if(!v)return;skey=v;try{localStorage.setItem(SK,v)}catch(e){}ready=false;$("syncKey").value="";pull()};
-  $("syncOff").onclick=function(){skey="";ready=false;clearTimeout(pushT);try{localStorage.removeItem(SK)}catch(e){}setSync("ยังไม่ได้เชื่อมต่อ","")};
+  skey=sKey();suser=lsGet(SU);$("syncUser").value=suser;if(skey)pull();
+  $("syncOn").onclick=function(){
+    var u=$("syncUser").value.trim(),v=$("syncKey").value.trim();
+    if(!u||!v){setSync("กรอกชื่อบัญชีและรหัสผ่านให้ครบ","");return}
+    var owner=lsGet(SO),diff=owner&&owner.toLowerCase()!==u.toLowerCase();
+    if(diff&&!confirm("เครื่องนี้มีข้อมูลของบัญชี \""+owner+"\"\nถ้าเข้าสู่ระบบเป็น \""+u+"\" ข้อมูลในเครื่องนี้จะถูกล้าง แล้วใช้ข้อมูลของบัญชีใหม่แทน\nต้องการดำเนินการต่อหรือไม่?"))return;
+    var ou=suser,ok=skey;suser=u;skey=v;setSync("กำลังตรวจสอบ…","");
+    api("GET").then(function(){
+      if(diff)resetLocal();
+      lsSet(SK,v);lsSet(SU,u);lsSet(SO,u);$("syncKey").value="";ready=false;return pull();
+    }).catch(function(e){suser=ou;skey=ok;setSync("เชื่อมต่อไม่สำเร็จ",e.message)});
+  };
+  $("syncOff").onclick=function(){skey="";suser="";ready=false;clearTimeout(pushT);try{localStorage.removeItem(SK);localStorage.removeItem(SU)}catch(e){}$("syncKey").value="";setSync("ยังไม่ได้เชื่อมต่อ","")};
   document.addEventListener("visibilitychange",function(){if(document.hidden||!skey||!ready)return;if(pushT){clearTimeout(pushT);push()}else pull()});
 })();
 </script>
